@@ -63,12 +63,12 @@ export function LyricsView({ lyrics, currentTime }: LyricsViewProps) {
                                 opacity: isActive ? 1 : isPast ? 0.4 : 0.6,
                                 scale: isActive ? 1.1 : 1,
                                 filter: isActive ? 'blur(0px)' : 'blur(1px)',
-                                color: isActive ? '#ffffff' : '#a1a1aa'
+                                color: isActive ? '#1a1a1a' : '#71717a'
                             }}
                             transition={{ duration: 0.01 }}
                             className={clsx(
                                 "text-2xl md:text-4xl font-bold transition-colors duration-300 cursor-default",
-                                isActive && "text-white drop-shadow-lg"
+                                isActive && "text-gray-900 drop-shadow-sm"
                             )}
                         >
                             {line.text}
@@ -76,7 +76,7 @@ export function LyricsView({ lyrics, currentTime }: LyricsViewProps) {
                     );
                 })}
                 {lyrics.length === 0 && (
-                    <div className="text-gray-400">No synced lyrics available</div>
+                    <div className="text-gray-600">No synced lyrics available</div>
                 )}
             </div>
         </div>

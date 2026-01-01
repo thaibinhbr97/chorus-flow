@@ -4,7 +4,7 @@ import { LyricsView } from '@/components/LyricsView';
 import { useAudioRecorder } from '@/hooks/useAudioRecorder';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2, Mic, Music, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface TrackInfo {
     name: string;
@@ -13,6 +13,7 @@ interface TrackInfo {
     durationMs: number;
     playOffsetMs: number;
     sampleDurationMs?: number;
+    score?: number;
 }
 
 interface LyricLine {
@@ -51,7 +52,7 @@ export default function Home() {
     };
 
     // Continuous Detection Loop
-    const runDetectionLoop = async () => {
+    const runDetectionLoop = useCallback(async () => {
         if (!detectionLoopRef.current) return;
 
         let foundTrack = false;
@@ -61,8 +62,8 @@ export default function Home() {
 
             // 1. Record Audio
             await startRecording();
-            // Record for 5 seconds
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            // Record for 12 seconds (increased for noisy environments)
+            await new Promise(resolve => setTimeout(resolve, 12000));
             const audioBlob = await stopRecording();
             const recordingEndTime = Date.now(); // Capture end time
 
@@ -139,16 +140,16 @@ export default function Home() {
                 setStatusMessage('Locked');
             }
         }
-    };
+    }, [startRecording, stopRecording, track]);
 
     // Re-sync function
-    const handleResync = () => {
+    const handleResync = useCallback(() => {
         setTrack(null);
         setLyrics([]);
         songStartRef.current = null;
         detectionLoopRef.current = true;
         runDetectionLoop();
-    };
+    }, [runDetectionLoop]);
 
     // Timer for smooth UI updates & Auto-restart
     useEffect(() => {
@@ -174,7 +175,7 @@ export default function Home() {
         }
 
         return () => cancelAnimationFrame(animationFrameId);
-    }, [isDetecting, track]);
+    }, [isDetecting, track, handleResync]);
 
     // Helper to parse LRC
     const parseLrc = (lrc: string): LyricLine[] => {
@@ -200,9 +201,7 @@ export default function Home() {
     };
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center bg-black text-white overflow-hidden relative">
-            {/* Background Ambience */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20 pointer-events-none" />
+        <main className="flex min-h-screen flex-col items-center justify-center overflow-hidden relative">
 
             <AnimatePresence mode="wait">
                 {!isDetecting ? (
@@ -216,7 +215,7 @@ export default function Home() {
                         <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
                             Chorus Flow
                         </h1>
-                        <p className="text-gray-400 text-lg max-w-md text-center">
+                        <p className="text-gray-600 text-lg max-w-md text-center">
                             Tap to identify music and sing along with synchronized lyrics.
                         </p>
 
@@ -237,15 +236,22 @@ export default function Home() {
                         className="z-10 w-full h-screen flex flex-col"
                     >
                         {/* Header */}
-                        <header className="flex items-center justify-between p-6 bg-black/50 backdrop-blur-md sticky top-0 z-20">
+                        <header className="flex items-center justify-between p-6 bg-white/30 backdrop-blur-md sticky top-0 z-20 border-b border-white/20">
                             <div className="flex items-center gap-4">
                                 {track ? (
                                     <div className="flex flex-col">
-                                        <h2 className="text-xl font-bold text-white leading-tight">{track.name}</h2>
-                                        <p className="text-sm text-gray-400">{track.artist} • {track.album}</p>
+                                        <div className="flex items-center gap-2">
+                                            <h2 className="text-xl font-bold text-gray-900 leading-tight">{track.name}</h2>
+                                            {track.score !== undefined && (
+                                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase ${track.score > 80 ? 'bg-green-100 text-green-700' : track.score > 60 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
+                                                    {track.score}% Match
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-sm text-gray-600">{track.artist} • {track.album}</p>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center gap-2 text-gray-400">
+                                    <div className="flex items-center gap-2 text-gray-600">
                                         <Loader2 className="w-5 h-5 animate-spin" />
                                         <span>{statusMessage}</span>
                                     </div>
@@ -255,16 +261,16 @@ export default function Home() {
                                 {track && (
                                     <button
                                         onClick={handleResync}
-                                        className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-sm font-medium transition-colors"
+                                        className="px-4 py-2 rounded-full bg-black/5 hover:bg-black/10 text-gray-800 text-sm font-medium transition-colors"
                                     >
                                         Re-sync
                                     </button>
                                 )}
                                 <button
                                     onClick={toggleDetection}
-                                    className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                                    className="p-2 rounded-full bg-black/5 hover:bg-black/10 transition-colors"
                                 >
-                                    <X className="w-6 h-6 text-white" />
+                                    <X className="w-6 h-6 text-gray-800" />
                                 </button>
                             </div>
                         </header>
@@ -274,12 +280,12 @@ export default function Home() {
                             {track ? (
                                 <LyricsView lyrics={lyrics} currentTime={currentTime} />
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-4">
+                                <div className="flex flex-col items-center justify-center h-full text-gray-600 gap-4">
                                     <div className="relative">
-                                        <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full animate-pulse" />
-                                        <Music className="w-16 h-16 relative z-10" />
+                                        <div className="absolute inset-0 bg-blue-400/20 blur-xl rounded-full animate-pulse" />
+                                        <Music className="w-16 h-16 relative z-10 text-blue-600" />
                                     </div>
-                                    <p>Listening for music...</p>
+                                    <p className="font-medium">Listening for music...</p>
                                 </div>
                             )}
                         </div>

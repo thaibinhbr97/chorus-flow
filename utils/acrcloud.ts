@@ -1,13 +1,6 @@
 import crypto from 'crypto';
 
-interface SignOptions {
-    host: string;
-    accessKey: string;
-    accessSecret: string;
-    dataType: string;
-    signatureVersion: string;
-    timestamp: string;
-}
+
 
 export function generateACRCloudSignature(
     method: string,

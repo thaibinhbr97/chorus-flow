@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
         acrFormData.append('sample', file);
         acrFormData.append('access_key', ACRCLOUD_ACCESS_KEY);
         acrFormData.append('data_type', 'audio');
+        acrFormData.append('audio_type', 'recorded'); // Optimized for noisy environments
         acrFormData.append('signature_version', '1');
         acrFormData.append('signature', signature);
         acrFormData.append('timestamp', timestamp);
@@ -108,7 +109,8 @@ export async function POST(req: NextRequest) {
                 album: albumName,
                 durationMs,
                 playOffsetMs,
-                sampleDurationMs: music.sample_end_time_offset_ms || 5000,
+                sampleDurationMs: music.sample_end_time_offset_ms || 12000,
+                score: music.score,
             },
             lyrics: lyrics
         });
