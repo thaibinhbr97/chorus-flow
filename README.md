@@ -1,6 +1,6 @@
 # Chorus Flow 🎵
 
-[**🚀 Live Demo**](https://chorus-flow-323l5gz9m-thaibinhbr97s-projects.vercel.app/)
+[**🚀 Live Demo**](https://chorus-flow.vercel.app/)
 
 **Chorus Flow** is an immersive web application that transforms the way you experience music. By leveraging advanced audio recognition technology, it listens to the music playing around you, identifies the track in real-time, and displays synchronized lyrics that flow beautifully with the beat. Designed with a premium, glassmorphic aesthetic, it provides a seamless and engaging sing-along experience.
 
