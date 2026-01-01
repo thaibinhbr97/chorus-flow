@@ -7,6 +7,12 @@
 ![Chorus Flow Banner 1](./public/banner1.png)
 ![Chorus Flow Banner 2](./public/banner2.png)
 
+## 🎥 Video Demo
+
+<video src="./public/chorus-flow.mov" controls="controls" style="max-width: 100%">
+  Your browser does not support the video tag.
+</video>
+
 ## ✨ Key Features
 
 - **🎶 AI-Powered Music Recognition**: Instantly identifies songs playing in your environment using your device's microphone.
