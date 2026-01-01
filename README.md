@@ -4,7 +4,7 @@
 
 **Chorus Flow** is an immersive web application that transforms the way you experience music. By leveraging advanced audio recognition technology, it listens to the music playing around you, identifies the track in real-time, and displays synchronized lyrics that flow beautifully with the beat. Designed with a premium, glassmorphic aesthetic, it provides a seamless and engaging sing-along experience.
 
-![Chorus Flow Banner](https://via.placeholder.com/1200x600/0f172a/6366f1?text=Chorus+Flow)
+![Chorus Flow Banner](./public/chorus-flow-banner.png)
 
 ## ✨ Key Features
 
