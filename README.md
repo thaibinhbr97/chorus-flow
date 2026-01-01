@@ -9,9 +9,7 @@
 
 ## 🎥 Video Demo
 
-<video src="./public/chorus-flow.mov" controls="controls" style="max-width: 100%">
-  Your browser does not support the video tag.
-</video>
+[![Chorus Flow Demo](https://img.youtube.com/vi/cbzimFHD9wk/0.jpg)](https://youtu.be/cbzimFHD9wk)
 
 ## ✨ Key Features
 
